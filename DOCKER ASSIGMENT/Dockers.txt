@@ -1,0 +1,151 @@
+Dockers
+    
+Task 1: Install Docker Engine on your system.
+
+- Install the Required Packages: Open PowerShell or Command Prompt as an administrator and execute the following command to install the necessary packages or package manager ie yum :
+
+ $ yum install -y yum-utils device-mapper-persistent-data lvm2
+
+- Set Up the Docker Repository: Next, add the Docker repository to your system using the following command:
+
+ $ sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+- Install Docker Engine using yum:
+
+ $ sudo yum install docker -y
+
+- Start and Enable Docker: Start the Docker service and enable it to start on boot using the commands :
+
+ $ sudo systemctl start docker
+ $ sudo systemctl enable docker
+ [ec2-user@ip-172-31 ~]$ sudo systemctl start docker
+ [ec2-user@ip-172-31 ~]$ sudo systemctl enable docker
+ Created symlink /etc/systemd/system/multi-user.target.wants/docker.service → /usr/lib/systemd/system/docker.service.
+
+- Verify Installation: Confirm that Docker is installed and running:
+
+ $ docker --version
+ [ec2-user@ip-172-31 ~]$ sudo docker --version
+ Docker version 25.0.3, build 4debf41
+
+- Check the status of our docker engine using:
+
+ $ sudo systemctl status docker
+
+[ec2-user@ip-172-31 ~]$ sudo systemctl status docker
+● docker.service - Docker Application Container Engine
+     Loaded: loaded (/usr/lib/systemd/system/docker.service; enabled; preset: disabled)
+     Active: active (running) since Thu 2024-04-25 04:22:15 UTC; 40min ago
+TriggeredBy: ● docker.socket
+       Docs: https://docs.docker.com
+   Main PID: 164573 (dockerd)
+      Tasks: 8
+     Memory: 39.3M
+        CPU: 633ms
+     CGroup: /system.slice/docker.service
+             └─164573 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock --default-ulimit nofile=32768:65536
+
+Apr 25 04:22:14 ip-172-31-16-251.ec2.internal systemd[1]: Starting docker.service - Docker Application Container Engine...
+Apr 25 04:22:14 ip-172-31-16-251.ec2.internal dockerd[164573]: time="2024-04-25T04:22:14.914694953Z" level=info msg="Starting up"
+Apr 25 04:22:15 ip-172-31-16-251.ec2.internal dockerd[164573]: time="2024-04-25T04:22:15.102581840Z" level=info msg="Loading containers: start."
+Apr 25 04:22:15 ip-172-31-16-251.ec2.internal dockerd[164573]: time="2024-04-25T04:22:15.507954262Z" level=info msg="Loading containers: done."
+Apr 25 04:22:15 ip-172-31-16-251.ec2.internal dockerd[164573]: time="2024-04-25T04:22:15.546749511Z" level=info msg="Docker daemon" commit=f417435 containerd-snapsho>
+Apr 25 04:22:15 ip-172-31-16-251.ec2.internal dockerd[164573]: time="2024-04-25T04:22:15.547153210Z" level=info msg="Daemon has completed initialization"
+Apr 25 04:22:15 ip-172-31-16-251.ec2.internal dockerd[164573]: time="2024-04-25T04:22:15.588782256Z" level=info msg="API listen on /run/docker.sock"
+Apr 25 04:22:15 ip-172-31-16-251.ec2.internal systemd[1]: Started docker.service - Docker Application Container Engine.
+lines 1-20/20 (END)
+
+- Docker Engine on your Linux system is installed using yum and running.
+
+
+Task 2: Build a Docker image from a Dockerfile using docker build. 
+
+- To build a docker image you need to first check for git using the command line $ git -v
+
+- Then you install git using the command line: $ sudo yum install git -y
+
+  ec2-user@ip-172-31 ~]$ sudo yum  install git -y
+
+- Clone the registry (public or private) needed and then use the command line $ ls to see the component of that directory
+
+  [ec2-user@ip-172-31 ~]$ git clone https://github.com/docker/getting-started.git
+  Cloning into 'getting-started'...
+
+  [ec2-user@ip-172-31 ~]$ ls
+  areyouok.sh  backup.log  error.txt  getting-started  my_script.log  myscript.sh  output.txt
+
+- Cd into the directory using the command-line $ cd getting-started/
+
+  [ec2-user@ip-172-31 ~]$ cd getting-started/
+
+- check the content again using $ ls
+
+  [ec2-user@ip-172-31 getting-started]$ ls
+  Dockerfile  LICENSE  README.md  app  build.sh  docker-compose.yml  docs  mkdocs.yml  requirements.txt
+
+- A dockerfile (getting-started) is created and all docker images must be built inside a Dockerfile                             
+
+- And you must be inside the working repository. Run a command $ sudo docker build -t chigo74hub(My docker registry name)/tp-app (name of my app):vi .
+
+  [ec2-user@ip-172-31 getting-started]$ sudo docker build -t chigo74hub/tp-app:vi .
+  [+] Building 44.0s (27/27) FINISHED  
+
+- Then check for the image using the command-line $ sudo docker images
+
+  [ec2-user@ip-172-31 getting-started]$ sudo docker images
+  REPOSITORY          TAG       IMAGE ID       CREATED         SIZE
+  chigo74hub/tp-app   vi        032ed19e7438   8 minutes ago   54.5MB
+
+- Refresh you website page and you will see the website respond and the new page getting started opens and populates for use.
+
+
+Task 3: Run a Docker container in interactive mode using docker run. 
+ 
+I used the container nginx docker container created in task 2 to complete task 3 and task 5. Here the docker will run, stop and restarted again. 
+
+- Run the docker image using the command-line $ sudo docker run -dp 80:80 chigo74hub/tp-app:vi
+
+  [ec2-user@ip-172-31 getting-started]$ sudo docker run -dp 80:80 chigo74hub/tp-app:vi
+  d73902fef1799a847e1d44cfa539c3d5aaa96a58061be04b78d7d6fefd9e0db2
+
+- Check your if the container is running using $ sudo docker ps 
+  
+  [ec2-user@ip-172-31 getting-started]$ sudo docker ps
+  CONTAINER ID   IMAGE                  COMMAND                  CREATED              STATUS              PORTS                               NAMES
+  d73902fef179   chigo74hub/tp-app:vi   "/docker-entrypoint.…"   About a minute ago   Up About a minute   0.0.0.0:80->80/tcp, :::80->80/tcp   focused_shtern
+
+- The status shows when it started running what port it ran from and the name focused_shtern. Note: the docker container is the running state of the docker image.
+
+- To see the docker container interact with the nginx website, I would refresh the website (nginx site) page and Voila! you will see the website respond and the new page getting started opens and populates for use.
+
+
+
+
+
+Task 4: Manage Docker volumes and networks using docker volume and docker network commands. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Task 5: Monitor Docker containers using docker ps, docker stats, and docker logs.
+
+
+- Docker ps is used to Check container run time, ports and status. To completed this task you use the command line $ sudo docker ps
+ 
+  [ec2-user@ip-172-31 getting-started]$ sudo docker ps
+  CONTAINER ID   IMAGE                  COMMAND                  CREATED              STATUS              PORTS                               NAMES
+  d73902fef179   chigo74hub/tp-app:vi   "/docker-entrypoint.…"   About a minute ago   Up About a minute   0.0.0.0:80->80/tcp, :::80->80/tcp   focused_shtern
